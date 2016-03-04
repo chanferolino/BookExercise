@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity {
               Intent i = new Intent(MainActivity.this,BookDetails.class);
                 i.putExtra("position",111);
                 startActivity(i);
+                
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,10 +29,9 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
     private ListView mListView;
     private TextView mTvEmpty;
-
     private List<Book> LBook = new ArrayList<>();
     private BookAdapter adapter;
-
+    private ProgressBar mProgressBar;
     public static ListViewFragment newInstance() {
         return new ListViewFragment();
     }
@@ -58,6 +58,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         // find all the views
         mListView = (ListView) view.findViewById(R.id.listView);
         mTvEmpty = (TextView) view.findViewById(android.R.id.empty);
+        mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
 
         // create a new instance of adapter
         adapter = new BookAdapter(getActivity(),
@@ -99,6 +100,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         protected void onPostExecute(ArrayList<Book> books) {
             super.onPostExecute(books);
             adapter.addAll(books);
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 
