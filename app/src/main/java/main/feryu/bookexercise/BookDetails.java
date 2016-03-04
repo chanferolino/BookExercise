@@ -3,14 +3,11 @@ package main.feryu.bookexercise;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -95,6 +92,51 @@ private long id;
 
         }
     }
+    public class addBooks extends AsyncTask<String, Void, Book> {
+
+        @Override
+        protected void onPreExecute() {
+            title = mEtTitle.getText().toString();
+            genre = mEtGenre.getText().toString();
+            author = mEtAuthor.getText().toString();
+            super.onPreExecute();
+        }
+
+        @Override
+        public Book doInBackground(String... params) {
+            String url = "http://joseniandroid.herokuapp.com/api/books/{bookId}";
+            JSONObject J = new JSONObject();
+            try {
+                J.put("title",title);
+                J.put("genre",genre);
+                J.put("author",author);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            HttpUtils.PUT(url, J);
+
+            return new Book(title,genre,author,false);
+        }
+
+        @Override
+        protected void onPostExecute(Book book) {
+          Intent e = new Intent(BookDetails.this,MainActivity.class);
+            startActivity(e);
+            super.onPostExecute(book);
+        }
+    }
+    public class deleteBook extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            String url2 = "http://joseniandroid.herokuapp.com/api/books/{bookId}";
+            HttpUtils.DELETE(url2);
+            return null;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,21 +165,9 @@ private long id;
             menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
-                    title = mEtTitle.getText().toString();
-                    genre = mEtGenre.getText().toString();
-                    author = mEtAuthor.getText().toString();
                     read = isRead.isChecked();
-                    String url = "http://joseniandroid.herokuapp.com/api/books/{bookId}";
-                    JSONObject J = new JSONObject();
-                    try {
-                        J.put("title",title);
-                        J.put("genre",genre);
-                        J.put("author",author);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    HttpUtils.PUT(url, J);
+                    addBooks ft= new addBooks();
+                    ft.execute();
 
 
 
@@ -148,6 +178,8 @@ private long id;
             return true;
         }
         if(id == R.id.action_delete){
+//            deleteBook del = new deleteBook();
+//            del.execute();
             return true;
         }
 

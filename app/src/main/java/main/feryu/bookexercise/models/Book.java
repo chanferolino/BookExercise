@@ -20,6 +20,14 @@ public class Book {
         this.isRead = isRead;
     }
 
+    public Book(String title, String genre, String author, boolean isRead) {
+
+        this.title = title;
+        this.genre = genre;
+        this.author = author;
+        this.isRead = isRead;
+    }
+
     public String getId() {
         return id;
     }
