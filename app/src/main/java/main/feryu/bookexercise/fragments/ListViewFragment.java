@@ -41,7 +41,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
 
 
-        FetchWeatherTask ft= new FetchWeatherTask();
+        FetchBooks ft= new FetchBooks();
         ft.execute();
 
     }
@@ -57,7 +57,6 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     public void onViewCreated (View view, @Nullable Bundle savedInstanceState){
         // find all the views
         mListView = (ListView) view.findViewById(R.id.listView);
-        mTvEmpty = (TextView) view.findViewById(android.R.id.empty);
         mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
 
         // create a new instance of adapter
@@ -68,7 +67,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         mListView.setAdapter(adapter);
 
 
-        mTvEmpty.setVisibility(View.GONE);
+
 
 
         // set item click listener
@@ -88,7 +87,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     }
 
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, ArrayList<Book>> {
+    public class FetchBooks extends AsyncTask<String, Void, ArrayList<Book>> {
 
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
@@ -99,7 +98,11 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         @Override
         protected void onPostExecute(ArrayList<Book> books) {
             super.onPostExecute(books);
+            if(books==null) {
+                return;
+            }
             adapter.addAll(books);
+            adapter.notifyDataSetChanged();
             mProgressBar.setVisibility(View.GONE);
         }
     }

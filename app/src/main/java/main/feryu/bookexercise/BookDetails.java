@@ -72,7 +72,9 @@ private long id;
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
 
+            Log.d("haha","joseniandroid.herokuapp.com/api/books/?_id="+id);
             return BookApi.getBook("joseniandroid.herokuapp.com/api/books/?_id="+id, "GET");
+
         }
 
         @Override

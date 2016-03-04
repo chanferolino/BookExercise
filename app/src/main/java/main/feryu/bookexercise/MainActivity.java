@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
 
-//            ListViewFragment fragment = (ListViewFragment) getFragmentManager().findFragmentById();
 
             return true;
         }
