@@ -1,5 +1,6 @@
 package main.feryu.bookexercise.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.feryu.bookexercise.BookDetails;
 import main.feryu.bookexercise.R;
 import main.feryu.bookexercise.adapter.BookAdapter;
 import main.feryu.bookexercise.apis.BookApi;
@@ -75,7 +77,11 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick (AdapterView < ? > parent, View view,int position, long id){
-        String name;
+
+
+        Intent i = new Intent(getContext(), BookDetails.class);
+        i.putExtra("position",id);
+        startActivity(i);
 
 
     }
