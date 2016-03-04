@@ -75,6 +75,8 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick (AdapterView < ? > parent, View view,int position, long id){
+        String name;
+
 
     }
 

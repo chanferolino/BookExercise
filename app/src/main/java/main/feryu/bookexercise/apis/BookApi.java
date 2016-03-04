@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import main.feryu.bookexercise.models.Book;
+import main.feryu.bookexercise.utils.HttpUtils;
 
 /**
  * Created by Christian on 3/4/2016.
@@ -20,7 +21,7 @@ public class BookApi {
     public static ArrayList<Book> LBook = new ArrayList<>();
 
     public static ArrayList<Book> getBook(String uri, @NonNull String requestMethod) {
-        String json = HttpUtils.getResponse(uri, requestMethod);
+        String json = HttpUtils.GET(uri);
 
         if (TextUtils.isEmpty(json)) {
             return null;
