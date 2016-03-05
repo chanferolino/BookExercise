@@ -205,7 +205,7 @@ private int position;
 
         if(flag%2==1){
             mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_done);
-            flag++;
+
         }
         else{
             mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_edit);
