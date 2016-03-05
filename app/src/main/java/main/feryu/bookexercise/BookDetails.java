@@ -22,7 +22,7 @@ import main.feryu.bookexercise.models.Book;
 import main.feryu.bookexercise.utils.HttpUtils;
 
 public class BookDetails extends AppCompatActivity {
-private long id;
+private int position;
     private EditText mEtTitle;
     private EditText mEtGenre;
     private EditText mEtAuthor;
@@ -33,8 +33,7 @@ private long id;
     private String author;
     private boolean read;
     private Toolbar toolbar;
-
-
+    private String taytol;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,14 +50,17 @@ private long id;
         mEtTitle.setEnabled(false);
         mEtGenre.setEnabled(false);
         mEtAuthor.setEnabled(false);
-       isRead.setChecked(true);
+       isRead.setEnabled(false);
 
-        Intent i = this.getIntent();
-        i.getLongExtra("position",id);
-        if(id != 111) {
+        Intent i = getIntent();
+       position = i.getIntExtra("position",0);
+       taytol= i.getStringExtra("title");
+
+        if(position != 111) {
             fetchBooks ft = new fetchBooks();
             ft.execute();
-            Log.d("Chan", String.valueOf(id));
+            Log.d("Chan", String.valueOf(position));
+            Log.d("Chan", taytol);
         }
         else{
             mEtTitle.setEnabled(true);
@@ -73,18 +75,19 @@ private long id;
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
 
-            Log.d("haha","joseniandroid.herokuapp.com/api/books/?_id="+id);
-            return BookApi.getBook("joseniandroid.herokuapp.com/api/books/?_id="+id, "GET");
+            Log.d("haha","http://joseniandroid.herokuapp.com/api/books?title="+taytol);
+            Log.d("haha", String.valueOf(BookApi.getBook("http://joseniandroid.herokuapp.com/api/books?title=" + taytol, "GET")));
+            return BookApi.getBook("http://joseniandroid.herokuapp.com/api/books?title="+taytol, "GET");
 
         }
 
         @Override
         protected void onPostExecute(ArrayList<Book> books) {
             boolean read;
-            toolbar.setTitle(books.get(0).getTitle());
-            mEtTitle.setText(books.get(0).getTitle());
-            mEtGenre.setText(books.get(0).getGenre());
-            mEtAuthor.setText(books.get(0).getAuthor());
+            toolbar.setTitle(books.get(position).getTitle());
+            mEtTitle.setText(books.get(position).getTitle());
+            mEtGenre.setText(books.get(position).getGenre());
+            mEtAuthor.setText(books.get(position).getAuthor());
 
             if(books.get(0).isRead()){
                 isRead.setChecked(true);
@@ -112,7 +115,7 @@ private long id;
 
         @Override
         public Book doInBackground(String... params) {
-            String url = "http://joseniandroid.herokuapp.com/api/books/{bookId}";
+            String url = "http://joseniandroid.herokuapp.com/api/books";
             JSONObject J = new JSONObject();
             try {
                 J.put("title",title);
@@ -144,7 +147,7 @@ private long id;
         @Override
         protected Void doInBackground(Void... voids) {
 
-            String url2 = "http://joseniandroid.herokuapp.com/api/books/{bookId}";
+            String url2 = "http://joseniandroid.herokuapp.com/api/books";
             HttpUtils.DELETE(url2);
             return null;
         }
@@ -173,14 +176,13 @@ private long id;
             mEtAuthor.setEnabled(true);
             isRead.setEnabled(true);
 
-            menuItem.setIcon((getResources().getDrawable(R.drawable.ic_done)));
+            menuItem.setIcon(R.drawable.ic_done);
             menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     read = isRead.isChecked();
-                    addBooks ft= new addBooks();
+                    addBooks ft = new addBooks();
                     ft.execute();
-
 
 
                     return true;

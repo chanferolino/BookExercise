@@ -43,7 +43,7 @@ public class HttpUtils {
         BufferedReader reader = null;
 
         try {
-            URL url = new URL(sUrl);
+            URL url = new URL(sUrl.replaceAll(" ", "%20"));
 
             // Create the request and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();

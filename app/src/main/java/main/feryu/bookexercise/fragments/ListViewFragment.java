@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("chan","check");
 
 
         FetchBooks ft= new FetchBooks();
@@ -59,13 +61,13 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         mListView = (ListView) view.findViewById(R.id.listView);
         mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
 
-
         // create a new instance of adapter
         adapter = new BookAdapter(getActivity(),
                 R.layout.list_item, LBook);
 
         // set the adapter
         mListView.setAdapter(adapter);
+
 
 
 
@@ -80,7 +82,11 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
 
         Intent i = new Intent(getContext(), BookDetails.class);
-        i.putExtra("position",id);
+        Log.d("chan", String.valueOf(id));
+        Log.d("chan", String.valueOf(position));
+
+        i.putExtra("position",position);
+        i.putExtra("title", LBook.get(position).getTitle());
         startActivity(i);
 
 
@@ -106,6 +112,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         protected void onPostExecute(ArrayList<Book> books) {
             super.onPostExecute(books);
             if(books==null) {
+                Log.d("chan","way sud");
                 return;
             }
             adapter.addAll(books);
