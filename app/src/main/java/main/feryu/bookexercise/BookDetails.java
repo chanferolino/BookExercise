@@ -33,6 +33,8 @@ private int position;
     private boolean read;
     private Toolbar toolbar;
     private String taytol;
+    private Menu mMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ private int position;
         mEtGenre = (EditText) findViewById(R.id.genre);
         mEtAuthor = (EditText) findViewById(R.id.author);
         isRead = (CheckBox)findViewById(R.id.checkBox);
-       menuItem = (MenuItem)findViewById(R.id.action_edit);
+
 
 
         mEtTitle.setEnabled(false);
@@ -65,7 +67,10 @@ private int position;
             mEtTitle.setEnabled(true);
             mEtGenre.setEnabled(true);
             mEtAuthor.setEnabled(true);
-            isRead.setEnabled(false);
+            isRead.setEnabled(true);
+            if(mMenu!=null)
+            mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_done);
+
 
         }
     }
@@ -88,7 +93,7 @@ private int position;
             mEtGenre.setText(books.get(position).getGenre());
             mEtAuthor.setText(books.get(position).getAuthor());
 
-            if(books.get(0).isRead()){
+            if(books.get(position).isRead()){
                 isRead.setChecked(true);
             }else{
                 isRead.setChecked(false);
@@ -147,8 +152,10 @@ private int position;
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_bookdetails, menu);
+        mMenu = menu;
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -165,8 +172,10 @@ private int position;
             mEtGenre.setEnabled(true);
             mEtAuthor.setEnabled(true);
             isRead.setEnabled(true);
-
+            menuItem = mMenu.findItem(R.id.action_edit);
             menuItem.setIcon(R.drawable.ic_done);
+
+            invalidateOptionsMenu();
             menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
