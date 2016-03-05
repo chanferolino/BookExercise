@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d("chan","check");
 
         FetchBooks ft= new FetchBooks();
         ft.execute();
@@ -78,9 +79,12 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick (AdapterView < ? > parent, View view,int position, long id){
 
-
         Intent i = new Intent(getContext(), BookDetails.class);
-        i.putExtra("position",id);
+        Log.d("chan", String.valueOf(id));
+        Log.d("chan", String.valueOf(position));
+
+        i.putExtra("position",position);
+        i.putExtra("title", LBook.get(position).getTitle());
         startActivity(i);
 
 
@@ -88,6 +92,12 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
 
     public class FetchBooks extends AsyncTask<String, Void, ArrayList<Book>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
 
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
@@ -99,6 +109,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         protected void onPostExecute(ArrayList<Book> books) {
             super.onPostExecute(books);
             if(books==null) {
+                Log.d("chan","way sud");
                 return;
             }
             adapter.addAll(books);

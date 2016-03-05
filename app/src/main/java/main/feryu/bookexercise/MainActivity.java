@@ -61,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
+        if(id == R.id.action_search){
 
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }
