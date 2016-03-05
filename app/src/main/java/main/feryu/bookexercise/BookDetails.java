@@ -1,5 +1,6 @@
 package main.feryu.bookexercise;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -102,6 +103,11 @@ private long id;
             genre = mEtGenre.getText().toString();
             author = mEtAuthor.getText().toString();
             super.onPreExecute();
+            ProgressDialog dialog = new ProgressDialog(BookDetails.this);
+            dialog.setMessage("Getting Book Data");
+            dialog.show();
+
+
         }
 
         @Override
@@ -125,8 +131,12 @@ private long id;
         protected void onPostExecute(Book book) {
           Intent e = new Intent(BookDetails.this,MainActivity.class);
             startActivity(e);
+            ProgressDialog dialog = new ProgressDialog(BookDetails.this);
             super.onPostExecute(book);
+            dialog.dismiss();
+
         }
+
     }
     public class deleteBook extends AsyncTask<Void, Void, Void> {
 

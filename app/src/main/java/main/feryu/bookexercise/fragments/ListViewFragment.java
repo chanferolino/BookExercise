@@ -59,13 +59,13 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         mListView = (ListView) view.findViewById(R.id.listView);
         mProgressBar = (ProgressBar)view.findViewById(R.id.progressBar);
 
+
         // create a new instance of adapter
         adapter = new BookAdapter(getActivity(),
                 R.layout.list_item, LBook);
 
         // set the adapter
         mListView.setAdapter(adapter);
-
 
 
 
@@ -88,6 +88,13 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
 
     public class FetchBooks extends AsyncTask<String, Void, ArrayList<Book>> {
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+        }
 
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
