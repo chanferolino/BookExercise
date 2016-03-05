@@ -42,6 +42,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         Log.d("chan","check");
 
+
         FetchBooks ft= new FetchBooks();
         ft.execute();
 
@@ -79,6 +80,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick (AdapterView < ? > parent, View view,int position, long id){
 
+
         Intent i = new Intent(getContext(), BookDetails.class);
         Log.d("chan", String.valueOf(id));
         Log.d("chan", String.valueOf(position));
@@ -95,6 +97,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
         @Override
         protected void onPreExecute() {
+
             super.onPreExecute();
 
         }

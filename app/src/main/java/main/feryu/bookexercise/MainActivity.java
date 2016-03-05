@@ -1,6 +1,11 @@
 package main.feryu.bookexercise;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,24 +16,20 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 import main.feryu.bookexercise.fragments.ListViewFragment;
+
 
 public class MainActivity extends AppCompatActivity {
     private ListViewFragment mListViewFragment;
+    FragmentManager manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        mListViewFragment = ListViewFragment.newInstance();
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, mListViewFragment)
-                .commit();
-
+        manager = getFragmentManager();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_add);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,11 +59,18 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
+            mListViewFragment = ListViewFragment.newInstance();
 
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .detach(mListViewFragment)
+                    .attach(mListViewFragment)
+                    .commit();
 
-            return true;
         }
         if(id == R.id.action_search){
 
@@ -68,4 +78,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
