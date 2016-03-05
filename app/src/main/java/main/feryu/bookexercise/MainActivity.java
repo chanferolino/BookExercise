@@ -29,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mListViewFragment = ListViewFragment.newInstance();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, mListViewFragment)
+                .commit();
         manager = getFragmentManager();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(R.drawable.ic_add);
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
               Intent i = new Intent(MainActivity.this,BookDetails.class);
-                i.putExtra("position",111);
+                i.putExtra("ic",100);
                 startActivity(i);
                 
             }

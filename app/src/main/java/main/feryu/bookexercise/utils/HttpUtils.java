@@ -191,6 +191,7 @@ public class HttpUtils {
      * @return the JSON response data in String format
      */
     private static String PLACE(String sUrl, String requestMethod, JSONObject json) {
+        Log.d("Added", "JSON place : "+json);
         HttpURLConnection urlConnection;
 
         try {

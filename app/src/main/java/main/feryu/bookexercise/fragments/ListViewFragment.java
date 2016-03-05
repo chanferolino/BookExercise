@@ -1,5 +1,6 @@
 package main.feryu.bookexercise.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     private List<Book> LBook = new ArrayList<>();
     private BookAdapter adapter;
     private ProgressBar mProgressBar;
+    private ProgressDialog dialog;
     public static ListViewFragment newInstance() {
         return new ListViewFragment();
     }
@@ -40,8 +42,8 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("chan","check");
-
+        Log.d("chan", "check");
+        dialog = new ProgressDialog(getContext());
 
         FetchBooks ft= new FetchBooks();
         ft.execute();
@@ -100,6 +102,9 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
             super.onPreExecute();
 
+            dialog.setMessage("Getting Book Data");
+            dialog.show();
+
         }
 
         @Override
@@ -110,14 +115,18 @@ public class ListViewFragment extends Fragment implements AdapterView.OnItemClic
 
         @Override
         protected void onPostExecute(ArrayList<Book> books) {
+
             super.onPostExecute(books);
+            dialog.dismiss();
             if(books==null) {
                 Log.d("chan","way sud");
                 return;
             }
+            Log.d("chan", String.valueOf(books));
             adapter.addAll(books);
             adapter.notifyDataSetChanged();
             mProgressBar.setVisibility(View.GONE);
+            dialog.dismiss();
         }
     }
 

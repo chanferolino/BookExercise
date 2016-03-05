@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import main.feryu.bookexercise.apis.BookApi;
+import main.feryu.bookexercise.fragments.ListViewFragment;
 import main.feryu.bookexercise.models.Book;
 import main.feryu.bookexercise.utils.HttpUtils;
 
@@ -31,10 +32,15 @@ private int position;
     private String title;
     private String genre;
     private String author;
+    private int ic;
     private boolean read;
     private Toolbar toolbar;
     private String taytol;
     private Menu mMenu;
+    private MenuItem mItem;
+    private ProgressDialog dialog;
+    private ListViewFragment mListViewFragment;
+    private int flag=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +52,8 @@ private int position;
         mEtGenre = (EditText) findViewById(R.id.genre);
         mEtAuthor = (EditText) findViewById(R.id.author);
         isRead = (CheckBox)findViewById(R.id.checkBox);
-
+        mListViewFragment = ListViewFragment.newInstance();
+       dialog = new ProgressDialog(BookDetails.this);
 
 
         mEtTitle.setEnabled(false);
@@ -56,26 +63,38 @@ private int position;
 
         Intent i = getIntent();
        position = i.getIntExtra("position",0);
+        ic = i.getIntExtra("ic", 0);
        taytol= i.getStringExtra("title");
 
-        if(position != 111) {
+        if(ic != 100) {
             fetchBooks ft = new fetchBooks();
             ft.execute();
+            flag=0;
             Log.d("Chan", String.valueOf(position));
-            Log.d("Chan", taytol);
+            if(taytol!=null) {
+                Log.d("Chan", taytol);
+            }
+            if(menuItem==null) {
+                Log.d("Chan", "menu is null");
+
+            }
         }
         else{
             mEtTitle.setEnabled(true);
             mEtGenre.setEnabled(true);
             mEtAuthor.setEnabled(true);
             isRead.setEnabled(true);
-            if(mMenu!=null)
-            mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_done);
-
-
+           flag=1;
         }
     }
     public class fetchBooks extends AsyncTask<String, Void, ArrayList<Book>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Getting Book Data");
+            dialog.show();
+        }
 
         @Override
         protected ArrayList<Book> doInBackground(String... params) {
@@ -89,17 +108,21 @@ private int position;
         @Override
         protected void onPostExecute(ArrayList<Book> books) {
             boolean read;
-            toolbar.setTitle(books.get(position).getTitle());
-            mEtTitle.setText(books.get(position).getTitle());
-            mEtGenre.setText(books.get(position).getGenre());
-            mEtAuthor.setText(books.get(position).getAuthor());
+            if(ic!=100) {
+                toolbar.setTitle(books.get(position).getTitle());
+                mEtTitle.setText(books.get(position).getTitle());
+                mEtGenre.setText(books.get(position).getGenre());
+                mEtAuthor.setText(books.get(position).getAuthor());
 
-            if(books.get(position).isRead()){
-                isRead.setChecked(true);
-            }else{
-                isRead.setChecked(false);
+                if (books.get(position).isRead()) {
+                    isRead.setChecked(true);
+                } else {
+                    isRead.setChecked(false);
+                }
+
             }
             super.onPostExecute(books);
+            dialog.dismiss();
 
         }
     }
@@ -110,9 +133,11 @@ private int position;
             title = mEtTitle.getText().toString();
             genre = mEtGenre.getText().toString();
             author = mEtAuthor.getText().toString();
+            read =  isRead.isChecked();
+
             super.onPreExecute();
-            ProgressDialog dialog = new ProgressDialog(BookDetails.this);
-            dialog.setMessage("Getting Book Data");
+
+            dialog.setMessage("Saving Book Data");
             dialog.show();
 
 
@@ -126,6 +151,13 @@ private int position;
                 J.put("title",title);
                 J.put("genre",genre);
                 J.put("author",author);
+                J.put("isRead",read);
+                Log.d("Added", "Title:" + title);
+                Log.d("Added","Genre:"+genre);
+                Log.d("Added","Author:"+author);
+                Log.d("Added","isRead:"+read);
+                Log.d("Added","JSON: "+J);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -137,12 +169,19 @@ private int position;
 
         @Override
         protected void onPostExecute(Book book) {
-          Intent e = new Intent(BookDetails.this,MainActivity.class);
-            startActivity(e);
-            ProgressDialog dialog = new ProgressDialog(BookDetails.this);
+
+
             super.onPostExecute(book);
             dialog.dismiss();
+            mListViewFragment = ListViewFragment.newInstance();
 
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .detach(mListViewFragment)
+                    .attach(mListViewFragment)
+                    .commit();
+            Intent e = new Intent(BookDetails.this,MainActivity.class);
+            startActivity(e);
         }
 
     }
@@ -163,6 +202,16 @@ private int position;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_bookdetails, menu);
         mMenu = menu;
+
+        if(flag%2==1){
+            mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_done);
+            flag++;
+        }
+        else{
+            mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_edit);
+            flag++;
+        }
+        menuItem = menu.findItem(R.id.action_edit);
         return true;
     }
 
@@ -174,19 +223,29 @@ private int position;
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_edit) {
 
 
-            mEtTitle.setEnabled(true);
-            mEtGenre.setEnabled(true);
-            mEtAuthor.setEnabled(true);
-            isRead.setEnabled(true);
-            menuItem = mMenu.findItem(R.id.action_edit);
-            menuItem.setIcon(R.drawable.ic_done);
+            if(flag%2==1){
+                mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_done);
+                flag++;
+            }
+            else{
+                mMenu.findItem(R.id.action_edit).setIcon(R.drawable.ic_edit);
+                flag++;
+            }
 
-            invalidateOptionsMenu();
-            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+
+                mEtTitle.setEnabled(true);
+                mEtGenre.setEnabled(true);
+                mEtAuthor.setEnabled(true);
+                isRead.setEnabled(true);
+
+
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     read = isRead.isChecked();

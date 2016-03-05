@@ -1,6 +1,7 @@
 package main.feryu.bookexercise.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
                 viewHolder.tvName.setText(book.getTitle());
                 if(book.isRead()==true)
                 {
+                    viewHolder.tvName.setTextColor(Color.RED);
                     viewHolder.tvName.setPaintFlags(viewHolder.tvName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
             }
